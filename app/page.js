@@ -1,95 +1,253 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+'use client' // when we use event listeners (eq: onClick, onChange)
+//when we use hooks like useState(), useReducer(), useEffect()
+import React from 'react';
+import { AppBar, Toolbar, Typography, Card, CardContent, IconButton, 
+CardHeader, Button, Paper, Grid, Box } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
+import ReceiptIcon from '@mui/icons-material/Receipt';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import TodayIcon from '@mui/icons-material/Today';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, 
+Legend, ResponsiveContainer, PieChart, Pie } from 'recharts';
+import { format } from 'date-fns';
 
-export default function Home() {
+
+const cardsData = [
+  {
+    title: 'Rs 0.00',
+    content: 'Sales',
+  },
+  {
+    title: 'Rs 0.00',
+    content: 'Sales Return',
+  },
+  {
+    title: 'Rs 0.00',
+    content: 'Purchasing',
+  },
+  {
+    title: 'Rs 0.00',
+    content: 'Expense',
+  },
+];
+
+const cardsData2 = [
+  {
+    title: '3',
+    content: 'Open Invoices',
+  },
+  {
+    title: 'Rs 9,950.00',
+    content: 'Total Open Invoices',
+  },
+  {
+    title: 'Rs 0.00',
+    content: 'Overdue Invoices',
+  },
+  {
+    title: 'Rs 0.00',
+    content: 'Collected last 30 days',
+  },
+];
+
+const dataForBarChart = [
+  {
+    name: 'Sales',
+    value: 5000,
+  },
+  {
+    name: 'Sales Return',
+    value: 2500,
+  },
+  {
+    name: 'Purchasing',
+    value: 4000,
+  },
+  {
+    name: 'Expense',
+    value: 3000,
+  },
+];
+
+const currentDate = new Date();
+
+function AppAppBar() {
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
+    <AppBar position="static">
+      <Toolbar>
+        <IconButton edge="start" color="inherit" aria-label="menu">
+          <MenuIcon />
+        </IconButton>
+        {/*sx-inline styles, take up all available horizontal space within its container, */}
+        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}> 
+          Welcome Main Branchp
+        </Typography>
+       
+        <Button color="success" variant="contained">
+          Subscribe
+        </Button>
+        <Button color="inherit" variant="out-lined" startIcon={< RefreshIcon/>}>
+          Refresh
+        </Button>
+      
+      </Toolbar>
+    </AppBar>
+  );
+}
+
+function CardGrid() {
+  const handleCardClick = (title) => {
+    // Handle the click event for the card with the given title
+    alert(`Clicked on ${title}`);
+  };
+
+  return (
+    <Box style={{ paddingTop: '10px' }}>
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <Card>
+            <CardHeader
+                    title={format(currentDate, 'MMMM dd, yyyy')}
+                    subheader={format(currentDate, 'EEEE')}
+                    action={
+                      <IconButton>
+                        <TodayIcon />
+                      </IconButton>
+                    }
             />
-          </a>
-        </div>
-      </div>
+            <CardContent>
+              <Grid container spacing={2}>
+                {cardsData.map((card, index) => (
+                  <Grid item xs={12} sm={6} md={3} key={index}>
+                    <Card onClick={() => handleCardClick(card.title)} style={{backgroundColor:'aliceblue'}}>
+                      <CardHeader
+                        title={card.title}
+                        action={
+                          <div>
+                            <IconButton aria-label="delete">
+                              <PointOfSaleIcon color="success" />
+                            </IconButton>
+                          </div>
+                        }
+                      />
+                      <CardContent>
+                        <Typography variant="body2" color="textSecondary">
+                          {card.content}
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                ))}
+              </Grid>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+    </Box>
+  );
+}
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+function CardGrid2() {
+  const handleCardClick = (title) => {
+    // Handle the click event for the card with the given title
+    alert(`Clicked on ${title}`);
+  };
 
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
+  return (
+    <Box style={{ paddingTop: '10px' }}>
+      <Accordion>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography variant="h6">Invoices</Typography>
+        </AccordionSummary>
+        <CardContent>
+          <Grid container spacing={2}>
+            {cardsData2.map((card, index) => (
+              <Grid item xs={12} sm={6} md={3} key={index}>
+                <Card onClick={() => handleCardClick(card.title)} style={{backgroundColor:'lavender'}}>
+                  <CardHeader
+                    title={card.title}
+                    action={
+                      <div>
+                        <IconButton aria-label="delete">
+                          <ReceiptIcon color="secondary" />
+                        </IconButton>
+                      </div>
+                    }
+                  />
+                  <CardContent>
+                    <Typography variant="body2" color="textSecondary">
+                      {card.content}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </CardContent>
+      </Accordion>
+    </Box>
+  );
+}
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
+function Chart() {
+  return (
+    <Grid container spacing={2} paddingTop={2}>
+    <Grid item xs={6}>
+    <Accordion>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography variant="h6">Sales Bar Chart</Typography>
+          </AccordionSummary>
+          <Grid item xs={12}>
+            <Paper elevation={3}>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={dataForBarChart}>
+                  <Bar dataKey="value" fill="#8884d8" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                </BarChart>
+              </ResponsiveContainer>
+            </Paper>
+          </Grid>
+        </Accordion>
+    </Grid>
+    <Grid item xs={6}>
+    <Accordion>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography variant="h6">Sales Pie Chart</Typography>
+          </AccordionSummary>
+          <Grid item xs={12}>
+            <Paper elevation={3}>
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie dataKey="value" data={dataForBarChart} fill="#a64d79" label />
+                  <Tooltip />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            </Paper>
+          </Grid>
+        </Accordion>
+    </Grid>
+  </Grid>
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
+  );
+}
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+const page = () => {
+  return (
+    <Box>
+    <AppAppBar/>
+    <CardGrid/>
+    <CardGrid2/>
+    <Chart/>
+  </Box>
   )
 }
+
+export default page
